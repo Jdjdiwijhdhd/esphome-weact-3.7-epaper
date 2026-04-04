@@ -32,6 +32,6 @@ display:
     update_interval: 30s # периоды обновления дисплея
 ```
 ## Результат
-![PXL_20260404_203116256](https://github.com/user-attachments/assets/99e78bee-bd3f-4f87-871c-40998a0f6b8a)
+![PXL_20260404_203116256](https://github.com/Jdjdiwijhdhd/esphome-weact-3.7-epaper/blob/master/images/PXL_20260404_203116256.jpg)
 
 Ссылка на репозиторий WeAct https://github.com/WeActStudio/WeActStudio.EpaperModule
