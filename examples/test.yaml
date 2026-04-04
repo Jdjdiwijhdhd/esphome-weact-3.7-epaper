@@ -1,0 +1,97 @@
+esphome:
+  name: weact-test
+  friendly_name: WeAct Test
+  platformio_options:
+    board_build.flash_mode: dio
+    board_build.mcu: esp32c3
+
+esp32:
+  board: esp32-c3-devkitm-1
+  variant: ESP32C3
+  framework:
+    type: arduino
+    version: recommended
+
+# Подключаем репозиторий
+external_components:
+  - source: github://Jdjdiwijhdhd/esphome-weact-3.7-epaper
+    components: [ weact_epaper ]
+    refresh: 0s  # Не кешировать для отладки
+
+logger:
+  hardware_uart: USB_SERIAL_JTAG
+  level: DEBUG
+
+# API для Home Assistant (опционально)
+api:
+  encryption:
+    key: "api_key"  # Замените при необходимости
+
+ota:
+  - platform: esphome
+    password: "ota"
+
+# Wi-Fi настройки
+wifi:
+  ssid: "wi-fi"
+  password: "password"
+  ap:
+    ssid: "Esp32C3"
+    password: "password"
+
+captive_portal:
+
+web_server:
+  port: 80
+
+# Настройка SPI
+spi:
+  clk_pin: 6
+  mosi_pin: 7
+
+# Конфигурация дисплея
+display:
+  - platform: weact_epaper
+    cs_pin: 0
+    dc_pin: 5
+    busy_pin: 3
+    reset_pin: 2
+    rotation: 0
+    update_interval: 10s
+    lambda: |-
+      it.fill(COLOR_OFF);
+      it.print(it.get_width() / 2, 20, id(title_font), COLOR_ON, 
+               TextAlign::CENTER_HORIZONTAL, "WeAct 3.7\" E-Paper");
+      it.line(20, 45, it.get_width() - 20, 45, COLOR_ON);
+      it.print(10, 70, id(text_font), COLOR_ON, "Component: weact_epaper");
+      it.print(10, 95, id(text_font), COLOR_ON, "Source: GitHub");
+      it.print(10, 120, id(text_font), COLOR_ON, "Resolution: 416x240");
+      char size_str[64];
+      snprintf(size_str, sizeof(size_str), "Display: %d x %d px", it.get_width(), it.get_height());
+      it.print(10, 145, id(text_font), COLOR_ON, size_str);
+      char uptime_str[64];
+      uint32_t uptime_sec = (uint32_t)id(uptime_sensor).state;
+      snprintf(uptime_str, sizeof(uptime_str), "Uptime: %d s", uptime_sec);
+      it.print(10, it.get_height() - 20, id(small_font), COLOR_ON, uptime_str);
+      it.rectangle(0, 0, it.get_width(), it.get_height(), COLOR_ON);
+
+# Шрифты
+font:
+  - file: "gfonts://Roboto"
+    id: title_font
+    size: 18
+  
+  - file: "gfonts://Roboto"
+    id: text_font
+    size: 14
+  
+  - file: "gfonts://Roboto"
+    id: small_font
+    size: 10
+
+# Датчики
+sensor:
+  - platform: uptime
+    name: "Uptime"
+    id: uptime_sensor
+    update_interval: 5s
