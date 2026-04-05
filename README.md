@@ -22,6 +22,11 @@
 external_components:
   - source: github://Jdjdiwijhdhd/esphome-weact-3.7-epaper
 
+# Настройка SPI
+spi:
+  clk_pin: 6
+  mosi_pin: 7
+
 display:
   - platform: weact_epaper
     cs_pin: 0
